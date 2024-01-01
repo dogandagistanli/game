@@ -2,6 +2,8 @@ import pygame
 import os
 from pygame.locals import *
 
+pygame.display.set_caption("Ilkkanoclick")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 pygame.init()
@@ -12,6 +14,11 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
+    def cpsPerSecond(self,total_clicks,game_duration):
+        self.velocity = total_clicks/game_duration
+        return self.velocity
+
+    
 
 BackGround = Background('background.png', [0, 0])
 
@@ -51,12 +58,14 @@ while running:
             game_over = True
 
             # Display score and prompt to play again
+            velocity_text = font.render(f"Your click number per second: {BackGround.cpsPerSecond(total_clicks,game_duration/1000)}",True,(255,255,255))
             score_text = font.render(f"Your score: {total_clicks} clicks", True, (255, 255, 255))
             continue_text = font.render("Click to play again", True, (255, 255, 255))
 
             screen.fill((0, 0, 0))  # Set the background to black
             screen.blit(score_text, (10, 10))
             screen.blit(continue_text, (10, 50))
+            screen.blit(velocity_text,(10,90))
             pygame.display.flip()
 
             # Wait for a click to continue playing
